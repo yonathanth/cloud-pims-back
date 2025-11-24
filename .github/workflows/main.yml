@@ -31,7 +31,6 @@ jobs:
               git clone -b master https://github.com/yonathanth/back3-cloud-api.git .
             fi
             
-            cd back3-cloud-api
             npm install --force
             
             # Run Prisma migrations
