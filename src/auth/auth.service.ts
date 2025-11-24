@@ -13,11 +13,14 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto): Promise<LoginResponseDto> {
+    console.log('🔐 Login attempt for user:', loginDto.username);
+    
     const owner = await this.prisma.owner.findUnique({
       where: { username: loginDto.username },
     });
 
     if (!owner) {
+      console.log('❌ User not found:', loginDto.username);
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -27,6 +30,7 @@ export class AuthService {
     );
 
     if (!isPasswordValid) {
+      console.log('❌ Invalid password for user:', loginDto.username);
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -35,8 +39,12 @@ export class AuthService {
       username: owner.username,
     };
 
+    const token = this.jwtService.sign(payload);
+    console.log('✅ Login successful for user:', owner.username);
+    console.log('✅ Generated token:', token.substring(0, 20) + '...');
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: token,
       user: {
         id: owner.id,
         username: owner.username,
