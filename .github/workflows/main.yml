@@ -28,7 +28,7 @@ jobs:
               git stash
               git pull origin master
             else
-              git clone -b master https://github.com/yonathanth/cloud-pims-back/.git .
+              git clone -b master https://github.com/yonathanth/cloud-pims-back.git .
             fi
             
             npm install --force
@@ -47,7 +47,7 @@ jobs:
               pm2 save
             else
               echo "New application"
-              pm2 start npm --name "pims-cloud-api" -- start
+              pm2 start npm --name "pims-cloud-api" -- start -- -p 64387
               pm2 startup
               pm2 save
             fi
