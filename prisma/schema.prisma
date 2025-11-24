@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Owner {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  fullName     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("owners")
+}
+
+model Pharmacy {
+  id                Int                @id @default(autoincrement())
+  pharmacyId        String             @unique
+  name              String?
+  apiKeyHash        String
+  lastUpdatedAt     DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  analyticsSnapshot AnalyticsSnapshot?
+
+  @@map("pharmacies")
+}
+
+model AnalyticsSnapshot {
+  id         Int      @id @default(autoincrement())
+  pharmacyId String   @unique
+  snapshot   Json
+  hash       String
+  uploadedAt DateTime
+  storedAt   DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  pharmacy   Pharmacy @relation(fields: [pharmacyId], references: [pharmacyId], onDelete: Cascade)
+
+  @@map("analytics_snapshots")
+}
