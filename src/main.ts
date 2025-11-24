@@ -54,7 +54,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  const port = process.env.PORT || 5000;
+  const port = process.env.PORT || 64387;
   await app.listen(port);
 
   console.log(`🚀 Cloud Analytics API is running on: http://localhost:${port}`);

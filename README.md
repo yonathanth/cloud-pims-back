@@ -76,9 +76,9 @@ npm run build
 npm run start:prod
 ```
 
-The API will run on `http://localhost:3000` (or PORT from .env)
+The API will run on `http://localhost:64387` (or PORT from .env)
 
-Swagger documentation: `http://localhost:3000/api`
+Swagger documentation: `http://localhost:64387/api`
 
 ## API Endpoints
 
