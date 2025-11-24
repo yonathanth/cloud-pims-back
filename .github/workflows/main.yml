@@ -28,7 +28,7 @@ jobs:
               git stash
               git pull origin master
             else
-              git clone -b master https://github.com/yonathanth/cloud-pims-back/.git .
+              git clone -b master https://github.com/yonathanth/cloud-pims-back.git .
             fi
             
             npm install --force
