@@ -5,6 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { PharmacyModule } from './pharmacy/pharmacy.module';
 import { ApiKeyModule } from './api-key/api-key.module';
+import { SyncModule } from './sync/sync.module';
+import { SalesModule } from './sales/sales.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { ApiKeyModule } from './api-key/api-key.module';
     AnalyticsModule,
     PharmacyModule,
     ApiKeyModule,
+    SyncModule,
+    SalesModule,
   ],
 })
 export class AppModule {}

@@ -92,13 +92,16 @@ async function main() {
     console.log(`   API Key: ${pharmacyApiKey}`);
   }
 
-  // Create sample analytics snapshot
-  const existingSnapshot = await prisma.analyticsSnapshot.findUnique({
-    where: { pharmacyId: pharmacy.pharmacyId },
+  // Create sample analytics snapshot (daily period for backward compatibility)
+  const existingSnapshot = await prisma.analyticsSnapshot.findFirst({
+    where: {
+      pharmacyId: pharmacy.pharmacyId,
+      period: 'daily',
+    },
   });
 
   if (existingSnapshot) {
-    console.log(`Analytics snapshot for "${pharmacyId}" already exists. Skipping...`);
+    console.log(`Analytics snapshot for "${pharmacyId}" (daily period) already exists. Skipping...`);
   } else {
     const sampleAnalytics = {
       sales: {
@@ -130,6 +133,7 @@ async function main() {
     await prisma.analyticsSnapshot.create({
       data: {
         pharmacyId: pharmacy.pharmacyId,
+        period: 'daily', // Default to daily for backward compatibility
         snapshot: sampleAnalytics as any,
         hash,
         uploadedAt,
@@ -143,7 +147,7 @@ async function main() {
       data: { lastUpdatedAt: uploadedAt },
     });
 
-    console.log(`✅ Created sample analytics snapshot for pharmacy: ${pharmacy.pharmacyId}`);
+    console.log(`✅ Created sample analytics snapshot for pharmacy: ${pharmacy.pharmacyId} (daily period)`);
   }
 
   console.log('✅ Seeding completed!');

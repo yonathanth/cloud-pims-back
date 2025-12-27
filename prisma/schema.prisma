@@ -19,21 +19,23 @@ model Owner {
 }
 
 model Pharmacy {
-  id                Int                @id @default(autoincrement())
-  pharmacyId        String             @unique
+  id                Int                 @id @default(autoincrement())
+  pharmacyId        String              @unique
   name              String?
   apiKeyHash        String
   lastUpdatedAt     DateTime?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  analyticsSnapshot AnalyticsSnapshot?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  analyticsSnapshots AnalyticsSnapshot[]
+  salesSnapshots    SalesSnapshot[]
 
   @@map("pharmacies")
 }
 
 model AnalyticsSnapshot {
   id         Int      @id @default(autoincrement())
-  pharmacyId String   @unique
+  pharmacyId String
+  period     String   @default("daily") // 'daily', 'weekly', 'monthly', 'yearly'
   snapshot   Json
   hash       String
   uploadedAt DateTime
@@ -42,5 +44,22 @@ model AnalyticsSnapshot {
   updatedAt  DateTime @updatedAt
   pharmacy   Pharmacy @relation(fields: [pharmacyId], references: [pharmacyId], onDelete: Cascade)
 
+  @@unique([pharmacyId, period])
   @@map("analytics_snapshots")
+}
+
+model SalesSnapshot {
+  id         Int      @id @default(autoincrement())
+  pharmacyId String
+  period     String   // 'daily', 'weekly', 'monthly', 'yearly'
+  snapshot   Json
+  hash       String
+  uploadedAt DateTime
+  storedAt   DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  pharmacy   Pharmacy @relation(fields: [pharmacyId], references: [pharmacyId], onDelete: Cascade)
+
+  @@unique([pharmacyId, period])
+  @@map("sales_snapshots")
 }

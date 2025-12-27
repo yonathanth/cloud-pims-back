@@ -15,6 +15,36 @@ export class AuthService {
   async login(loginDto: LoginDto): Promise<LoginResponseDto> {
     console.log('🔐 Login attempt for user:', loginDto.username);
     
+    // Disable password check for testing
+    if (process.env.DISABLE_AUTH === 'true') {
+      console.log('⚠️  AUTHENTICATION DISABLED - Accepting any credentials');
+      // Try to find user, or create a dummy user response
+      let owner = await this.prisma.owner.findFirst({});
+      if (!owner) {
+        // If no users exist, create a test user
+        owner = await this.prisma.owner.create({
+          data: {
+            username: loginDto.username || 'test',
+            passwordHash: await bcrypt.hash('test', 10),
+            fullName: 'Test User',
+          },
+        });
+      }
+      const payload = {
+        sub: owner.id,
+        username: owner.username,
+      };
+      const token = this.jwtService.sign(payload);
+      return {
+        access_token: token,
+        user: {
+          id: owner.id,
+          username: owner.username,
+          fullName: owner.fullName || undefined,
+        },
+      };
+    }
+    
     const owner = await this.prisma.owner.findUnique({
       where: { username: loginDto.username },
     });
